@@ -1,0 +1,75 @@
+create database Ecommerce_clauses
+use Ecommerce_clauses
+
+create table product(pid numeric(6) primary key,pname nvarchar(20), price numeric(10,2))
+
+insert into product values(1235,'phone',20000)
+insert into product values(1236,'speaker',9000)
+insert into product values(1237,'motor',3500)
+insert into product values(1238,'toy',600)
+insert into product values(1239,'fridge',35000)
+insert into product values(1240,'books',10000)
+insert into product values(1241,'table',1500)
+insert into product values(1242,'chair',1200)
+
+select * from product
+
+create table customer(cid int primary key identity(1,1) ,name nvarchar(20),address nvarchar(20), pid numeric(6)CONSTRAINT fk_product_id
+FOREIGN KEY (pid)
+REFERENCES product (pid))
+insert into customer values('mohit','GZB',1241)
+insert into customer values('Arpit','GZB',1242)
+insert into customer values('romil','bombay',1238)
+insert into customer values('yash','pune',1237)
+insert into customer values('harshit','goa',1239)
+insert into customer values('abhay','MBD',1235)
+insert into customer values('vansh','MBD',1236)
+insert into customer values('naina','goa',1239)
+
+select * from customer
+
+create table orders(id numeric(5) primary key identity(6543,1) ,price numeric(10,2),pid numeric(6) CONSTRAINT fk_order_product_id
+FOREIGN KEY (pid)
+REFERENCES product (pid))
+
+insert into orders values(35000,1239)
+insert into orders values(25000,1236)
+insert into orders values(3500,1237)
+insert into orders values(1200,1242)
+insert into orders values(1200,1242)
+insert into orders values(20000,1235)
+insert into orders values(9000,1236)
+insert into orders values(35000,1239)
+
+select * from orders
+
+select address,sum(price)as 'total_sale'
+from customer,product where customer.pid=product.pid group by address
+
+SELECT COUNT (cid) AS Number_of_orders, avg(price) as average_cost,address FROM customer,product GROUP BY address 
+
+select * from orders,product where orders.price=product.price order by orders.price desc
+
+ SELECT  sum(price) as 'total_price' FROM product group by price
+ HAVING  price>3000
+
+ 
+SELECT  MAX(pid) AS "Highest_sale"  
+FROM customer  
+GROUP BY address having max(pid)>1237
+
+SELECT pid, address  
+FROM customer 
+WHERE address != 'goa'
+ORDER BY pid   
+
+SELECT id as 'order_id' ,
+pid, price
+FROM orders  
+WHERE price between 11000 and 25000 
+ORDER BY price; 
+
+select * from orders
+order by price desc 
+OFFSET 2 ROWS
+FETCH NEXT 4 ROWS ONLY;
